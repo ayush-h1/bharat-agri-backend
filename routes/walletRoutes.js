@@ -17,6 +17,14 @@ router.post('/add-funds', auth, async (req, res) => {
     user.walletBalance += amount;
     await user.save();
 
+    // Inside /wallet/add-funds, after saving user
+await Transaction.create({
+  userId: user._id,
+  type: 'deposit',
+  amount,
+  description: 'Wallet top-up'
+});
+
     // Return updated user (without password)
     const updatedUser = await User.findById(req.user.id).select('-password');
     res.json(updatedUser);
