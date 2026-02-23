@@ -42,6 +42,7 @@ app.use('/api/referrals', require('./routes/referralRoutes')); // referrals
 app.use('/api/withdrawals', require('./routes/withdrawalRoutes')); // withdrawals
 app.use('/api/admin', require('./routes/adminRoutes'));       // admin panel
 app.use('/api/wallet', require('./routes/walletRoutes'));     // add funds (top-up)
+app.use('/api/transactions', require('./routes/transactionRoutes'));
 
 // ===== Test Endpoint (optional) =====
 app.get('/api/test', (req, res) => {
