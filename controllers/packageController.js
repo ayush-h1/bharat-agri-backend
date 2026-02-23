@@ -1,4 +1,4 @@
-const Package = require('../models/package');
+const Package = require('../models/Package');
 
 // @desc    Get all active packages
 // @route   GET /api/packages
