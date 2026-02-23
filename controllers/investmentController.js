@@ -1,5 +1,5 @@
 const Investment = require('../models/Investment');
-const Package = require('../models/package');
+const Package = require('../models/Package');
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
 const Referral = require('../models/Referral');
