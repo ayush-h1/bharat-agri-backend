@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const Package = require('../models/package');
+const Package = require('../models/Package');
 const Withdrawal = require('../models/Withdrawal');
 const Investment = require('../models/Investment');
 const Transaction = require('../models/Transaction');
