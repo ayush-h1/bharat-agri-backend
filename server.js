@@ -44,6 +44,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));       // admin panel
 app.use('/api/wallet', require('./routes/walletRoutes'));     // add funds (top-up)
 app.use('/api/transactions', require('./routes/transactionRoutes'));
 app.use('/api', require('./routes/bankRoutes'));
+app.use('/api/payment-requests', require('./routes/paymentRequestRoutes'));
 
 // ===== Test Endpoint (optional) =====
 app.get('/api/test', (req, res) => {
