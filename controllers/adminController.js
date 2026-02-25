@@ -125,21 +125,44 @@ exports.rejectWithdrawal = async (req, res) => {
 };
 
 // Dashboard stats
+const User = require("../models/User");
+const Investment = require("../models/Investment");
+const Withdrawal = require("../models/Withdrawal");
+
 exports.getAdminStats = async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
+
     const totalInvestments = await Investment.countDocuments();
-    const totalInvestmentAmount = await Investment.aggregate([
-      { $group: { _id: null, total: { $sum: '$amount' } } }
+
+    const totalInvestedAgg = await Investment.aggregate([
+      { $group: { _id: null, total: { $sum: "$amount" } } }
     ]);
-    const pendingWithdrawals = await Withdrawal.countDocuments({ status: 'pending' });
+    const totalInvested = totalInvestedAgg[0]?.total || 0;
+
+    const totalEarningsAgg = await Investment.aggregate([
+      { $group: { _id: null, total: { $sum: "$totalPaid" } } }
+    ]);
+    const totalEarnings = totalEarningsAgg[0]?.total || 0;
+
+    const pendingWithdrawals = await Withdrawal.countDocuments({ status: "pending" });
+
+    const totalWithdrawnAgg = await Withdrawal.aggregate([
+      { $match: { status: "approved" } },
+      { $group: { _id: null, total: { $sum: "$amount" } } }
+    ]);
+    const totalWithdrawn = totalWithdrawnAgg[0]?.total || 0;
+
     res.json({
       totalUsers,
       totalInvestments,
-      totalInvested: totalInvestmentAmount[0]?.total || 0,
+      totalInvested,
+      totalEarnings,
+      totalWithdrawn,
       pendingWithdrawals
     });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
   }
 };
