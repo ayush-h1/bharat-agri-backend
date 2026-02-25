@@ -28,6 +28,35 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+exports.getDailyRevenue = async (req, res) => {
+  try {
+    const data = await Investment.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$createdAt"
+            }
+          },
+          total: { $sum: "$amount" }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    const formatted = data.map(d => ({
+      date: d._id,
+      value: d.total
+    }));
+
+    res.json(formatted);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 // Package management
 exports.createPackage = async (req, res) => {
   try {
