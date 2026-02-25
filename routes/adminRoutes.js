@@ -8,35 +8,35 @@ const {
   getPendingWithdrawals,
   approveWithdrawal,
   rejectWithdrawal,
-  getAdminStats
+  getAdminStats,
+  getDailyRevenue
 } = require('../controllers/adminController');
+
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
-const { getAdminStats, getDailyRevenue } = require("../controllers/adminController");
 
 const router = express.Router();
 
 // All admin routes require authentication and admin role
 router.use(auth, admin);
 
-// User management
+// ================= USER MANAGEMENT =================
 router.get('/users', getAllUsers);
 router.put('/users/:id', updateUser);
 
-// Package management
+// ================= PACKAGE MANAGEMENT =================
 router.post('/packages', createPackage);
 router.put('/packages/:id', updatePackage);
 router.delete('/packages/:id', deletePackage);
 
-// Withdrawal management
+// ================= WITHDRAWAL MANAGEMENT =================
 router.get('/withdrawals/pending', getPendingWithdrawals);
 router.put('/withdrawals/:id/approve', approveWithdrawal);
 router.put('/withdrawals/:id/reject', rejectWithdrawal);
 
-
-router.get("/revenue", protect, adminOnly, getDailyRevenue);
-// Stats
-
+// ================= ADMIN ANALYTICS =================
+router.get('/stats', getAdminStats);
+router.get('/revenue', getDailyRevenue);
 
 module.exports = router;
 
