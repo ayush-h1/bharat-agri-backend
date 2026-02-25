@@ -125,9 +125,6 @@ exports.rejectWithdrawal = async (req, res) => {
 };
 
 // Dashboard stats
-const User = require("../models/User");
-const Investment = require("../models/Investment");
-const Withdrawal = require("../models/Withdrawal");
 
 exports.getAdminStats = async (req, res) => {
   try {
