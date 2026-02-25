@@ -36,7 +36,7 @@ router.put('/withdrawals/:id/reject', rejectWithdrawal);
 
 router.get("/revenue", protect, adminOnly, getDailyRevenue);
 // Stats
-router.get('/stats', getAdminStats);
+
 
 module.exports = router;
 
