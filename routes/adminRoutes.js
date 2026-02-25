@@ -12,6 +12,7 @@ const {
 } = require('../controllers/adminController');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
+const { getAdminStats, getDailyRevenue } = require("../controllers/adminController");
 
 const router = express.Router();
 
@@ -32,7 +33,11 @@ router.get('/withdrawals/pending', getPendingWithdrawals);
 router.put('/withdrawals/:id/approve', approveWithdrawal);
 router.put('/withdrawals/:id/reject', rejectWithdrawal);
 
+
+router.get("/revenue", protect, adminOnly, getDailyRevenue);
 // Stats
 router.get('/stats', getAdminStats);
 
 module.exports = router;
+
+
