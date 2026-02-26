@@ -57,6 +57,19 @@ exports.getDailyRevenue = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+// ================= ALL INVESTMENTS =================
+exports.getAllInvestments = async (req, res) => {
+  try {
+    const investments = await Investment.find()
+      .populate('userId', 'name email')
+      .populate('packageId', 'name')
+      .sort({ createdAt: -1 });
+
+    res.json(investments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // Package management
 exports.createPackage = async (req, res) => {
