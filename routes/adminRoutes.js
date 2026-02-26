@@ -18,7 +18,7 @@ router.post('/users/:id/add-funds', adminController.addFunds);
 router.get('/investments', adminController.getAllInvestments);
 
 // Withdrawals
-router.get('/withdrawals', adminController.getWithdrawals);
+router.get('/withdrawals', adminController.getPendingWithdrawals);
 router.put('/withdrawals/:id/approve', adminController.approveWithdrawal);
 router.put('/withdrawals/:id/reject', adminController.rejectWithdrawal);
 
