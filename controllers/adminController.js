@@ -233,6 +233,18 @@ exports.addFunds = async (req, res) => {
   }
 };
 
+// ================= GET PENDING PAYMENTS =================
+exports.getPendingPayments = async (req, res) => {
+  try {
+    const payments = await PaymentRequest.find({ status: 'pending' })
+      .populate('userId', 'name email')
+      .sort('-createdAt');
+    res.json(payments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 // ================= APPROVE PAYMENT =================
 exports.approvePayment = async (req, res) => {
