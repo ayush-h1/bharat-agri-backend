@@ -3,6 +3,7 @@ const Package = require('../models/Package');
 const Withdrawal = require('../models/Withdrawal');
 const Investment = require('../models/Investment');
 const Transaction = require('../models/Transaction');
+const PaymentRequest = require('../models/PaymentRequest'); 
 
 // User management
 exports.getAllUsers = async (req, res) => {
@@ -190,5 +191,85 @@ exports.getAdminStats = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ error: "Server error" });
+  }
+};
+  // 👈 add this at top if not present
+
+
+// ================= ADMIN ADD FUNDS =================
+exports.addFunds = async (req, res) => {
+  try {
+    const { amount } = req.body;
+
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    user.walletBalance += Number(amount);
+    await user.save();
+
+    await Transaction.create({
+      userId: user._id,
+      type: "credit",
+      amount,
+      description: "Admin added funds"
+    });
+
+    res.json({ message: "Funds added successfully", user });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+// ================= APPROVE PAYMENT =================
+exports.approvePayment = async (req, res) => {
+  try {
+    const payment = await PaymentRequest.findById(req.params.id);
+
+    if (!payment) return res.status(404).json({ error: "Payment not found" });
+    if (payment.status !== "pending") {
+      return res.status(400).json({ error: "Already processed" });
+    }
+
+    const user = await User.findById(payment.userId);
+
+    user.walletBalance += payment.amount;
+    await user.save();
+
+    payment.status = "approved";
+    payment.processedAt = new Date();
+    await payment.save();
+
+    await Transaction.create({
+      userId: user._id,
+      type: "deposit",
+      amount: payment.amount,
+      description: "Payment approved by admin"
+    });
+
+    res.json(payment);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+// ================= REJECT PAYMENT =================
+exports.rejectPayment = async (req, res) => {
+  try {
+    const payment = await PaymentRequest.findById(req.params.id);
+
+    if (!payment) return res.status(404).json({ error: "Payment not found" });
+    if (payment.status !== "pending") {
+      return res.status(400).json({ error: "Already processed" });
+    }
+
+    payment.status = "rejected";
+    payment.processedAt = new Date();
+    await payment.save();
+
+    res.json(payment);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
